@@ -1,0 +1,37 @@
+name: Update flake.lock
+
+on:
+  schedule:
+    - cron: "0 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      # Actions are pinned by commit because MONSTRAO installs whatever this job pushes to main.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      # Frees runner disk for the ~11 GiB MONSTRAO closure and its builds.
+      - uses: wimpysworld/nothing-but-nix@687c797a730352432950c707ab493fcc951818d7 # v10
+      - uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31
+        with:
+          extra_nix_config: |
+            extra-substituters = https://cache.numtide.com
+            extra-trusted-public-keys = niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g=
+      - run: nix flake update
+      - run: nix flake check
+      - run: nix build .#nixosConfigurations.MONSTRAO.config.system.build.toplevel
+      - name: Push the new lock file
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet flake.lock; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "flake.lock: update" flake.lock
+          git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:main

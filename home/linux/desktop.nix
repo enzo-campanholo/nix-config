@@ -1,0 +1,128 @@
+{
+  config,
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  palette = import ./selenized.nix;
+  sans = {
+    name = "Adwaita Sans";
+    package = pkgs.adwaita-fonts;
+  };
+  mono = {
+    name = "JetBrains Mono";
+    package = pkgs.jetbrains-mono;
+  };
+in
+{
+  imports = [ inputs.helium.homeModules.default ];
+
+  xdg.configFile."niri/config.kdl".source =
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix-config/home/linux/niri.kdl";
+
+  fonts.fontconfig.defaultFonts = {
+    sansSerif = [ sans.name ];
+    monospace = [ mono.name ];
+  };
+  gtk = {
+    enable = true;
+    font = sans;
+    colorScheme = "dark";
+  };
+  home.pointerCursor = {
+    enable = true;
+    name = "Adwaita";
+    package = pkgs.adwaita-icon-theme;
+    size = 24;
+    gtk.enable = true;
+  };
+
+  home.packages = with pkgs; [
+    mono.package
+    nautilus
+    wl-clipboard
+    playerctl
+    yed
+    loupe
+    mpv
+    # shared-mime-info has no GraphML type, so .graphml files are detected as XML and open in the browser.
+    (writeTextDir "share/mime/packages/graphml.xml" ''
+      <?xml version="1.0" encoding="UTF-8"?>
+      <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+        <mime-type type="application/graphml+xml">
+          <comment>GraphML document</comment>
+          <sub-class-of type="application/xml"/>
+          <glob pattern="*.graphml"/>
+        </mime-type>
+      </mime-info>
+    '')
+  ];
+
+  programs.helium = {
+    enable = true;
+    # Without these, Chromium composes dead keys with its own built-in table instead of fcitx5.
+    flags = [
+      "--enable-wayland-ime"
+      "--wayland-text-input-version=3"
+    ];
+  };
+
+  qt = {
+    enable = true;
+    platformTheme.name = "xdgdesktopportal";
+  };
+
+  programs.ghostty = {
+    enable = true;
+    settings = {
+      theme = "Selenized Black";
+      font-family = mono.name;
+      command = lib.getExe config.programs.fish.package;
+    };
+  };
+
+  programs.sioyek = {
+    enable = true;
+    # sioyek's OpenGL 3.3 core surface never maps under Qt's Wayland backend.
+    # Drop the wrapper once https://github.com/ahrm/sioyek/issues/1660 is fixed.
+    package = pkgs.symlinkJoin {
+      inherit (pkgs.sioyek) name meta;
+      paths = [ pkgs.sioyek ];
+      nativeBuildInputs = [ pkgs.makeWrapper ];
+      postBuild = "wrapProgram $out/bin/sioyek --set QT_QPA_PLATFORM xcb";
+    };
+    config = {
+      startup_commands = [ "toggle_custom_color" ];
+      background_color = palette.bg_0;
+      custom_background_color = palette.bg_0;
+      custom_text_color = palette.fg_0;
+    };
+  };
+
+  xdg.desktopEntries.yed = {
+    name = "yEd";
+    exec = "yed %F";
+    categories = [ "Graphics" ];
+    mimeType = [ "application/graphml+xml" ];
+  };
+
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      "text/html" = "helium.desktop";
+      "x-scheme-handler/http" = "helium.desktop";
+      "x-scheme-handler/https" = "helium.desktop";
+      "application/pdf" = "sioyek.desktop";
+      "text/plain" = "emacs.desktop";
+      "application/graphml+xml" = "yed.desktop";
+    }
+    // lib.genAttrs [
+      "image/gif"
+      "image/jpeg"
+      "image/png"
+      "image/webp"
+    ] (_: "org.gnome.Loupe.desktop");
+  };
+}
