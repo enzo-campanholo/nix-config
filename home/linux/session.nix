@@ -23,8 +23,8 @@ in
         "niri/language"
         "pulseaudio"
         "clock"
-        "tray"
       ];
+      clock.format = "{:%a %d %b %H:%M}";
       pulseaudio.on-click = lib.getExe pkgs.pavucontrol;
     };
     style = ''
@@ -58,7 +58,7 @@ in
       #window {
         padding: 0 8px;
       }
-      #language, #pulseaudio, #clock, #tray {
+      #language, #pulseaudio, #clock {
         padding: 0 8px;
         border-left: 1px solid ${palette.bg_2};
       }
