@@ -120,6 +120,9 @@ layout {
     // Set gaps around windows in logical pixels.
     gaps 0
 
+    // Let the wallpaper in the backdrop show through the workspaces.
+    background-color "transparent"
+
     // When to center a column when changing focus, options are:
     // - "never", default behavior, focusing an off-screen column will keep at the left
     //   or right edge of the screen.
@@ -352,6 +355,13 @@ window-rule {
 /-window-rule {
     geometry-corner-radius 12
     clip-to-geometry true
+}
+
+// Keep the swaybg wallpaper still behind the workspaces and in the overview,
+// instead of scrolling with each workspace.
+layer-rule {
+    match namespace="^wallpaper$"
+    place-within-backdrop true
 }
 
 binds {

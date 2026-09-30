@@ -128,4 +128,20 @@ in
   };
 
   services.polkit-gnome.enable = true;
+
+  # Caspar David Friedrich, Monk by the Sea (1808-1810), Alte Nationalgalerie.
+  # https://artsandculture.google.com/asset/KwEv_TMiJhn5kA, fetched with dezoomify-rs.
+  systemd.user.services.swaybg = {
+    Unit = {
+      Description = "Wallpaper";
+      ConditionEnvironment = "WAYLAND_DISPLAY";
+      PartOf = [ config.wayland.systemd.target ];
+      After = [ config.wayland.systemd.target ];
+    };
+    Service = {
+      ExecStart = "${lib.getExe pkgs.swaybg} --mode fill --image ${./monk-by-the-sea.jpg}";
+      Restart = "on-failure";
+    };
+    Install.WantedBy = [ config.wayland.systemd.target ];
+  };
 }
