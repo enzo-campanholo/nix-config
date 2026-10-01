@@ -12,11 +12,11 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      # Actions are pinned by commit because MONSTRAO installs whatever this job pushes to main.
+      # Actions are pinned by commit because MONSTRAO and MONSTRINHO install whatever this job pushes to main.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
-      # Frees runner disk for the ~11 GiB MONSTRAO closure and its builds.
+      # Frees runner disk for the ~20 GiB of MONSTRAO and MONSTRINHO closures and their builds.
       - name: Free disk space
         run: |
           sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
@@ -29,6 +29,7 @@ jobs:
       - run: nix flake update
       - run: nix flake check
       - run: nix build .#nixosConfigurations.MONSTRAO.config.system.build.toplevel
+      - run: nix build .#nixosConfigurations.MONSTRINHO.config.system.build.toplevel
       - name: Push the new lock file
         env:
           GITHUB_TOKEN: ${{ github.token }}

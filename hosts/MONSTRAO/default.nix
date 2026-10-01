@@ -8,7 +8,6 @@
   ];
 
   networking.hostName = "MONSTRAO";
-  time.timeZone = "America/Sao_Paulo";
 
   boot = {
     lanzaboote = {

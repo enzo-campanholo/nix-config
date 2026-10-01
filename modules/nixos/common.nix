@@ -18,6 +18,8 @@
   };
   system.configurationRevision = inputs.self.rev or inputs.self.dirtyRev or null;
 
+  time.timeZone = "America/Sao_Paulo";
+
   programs.fish.enable = true;
 
   programs.nh = {
