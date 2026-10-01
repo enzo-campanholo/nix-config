@@ -32,6 +32,8 @@ in
   # Without a desktop nothing activates upower over D-Bus, so it would never see the battery run down.
   systemd.services.upower.wantedBy = [ "multi-user.target" ];
   services.thermald.enable = true;
+  # This firmware has no usable adaptive policy: thermald exits and expects a restart to run without one, as upstream's unit does.
+  systemd.services.thermald.serviceConfig.Restart = "on-failure";
   zramSwap.enable = true;
 
   services.openssh = {
@@ -70,13 +72,17 @@ in
   ];
 
   programs.git.enable = true;
-  environment.systemPackages = with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
+  environment.systemPackages = [
+    # Ghostty on MONSTRAO sends TERM=xterm-ghostty over SSH.
+    pkgs.ghostty.terminfo
+  ]
+  ++ (with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
     claude-code
     codex
     hermes-agent
     openclaw
     t3code
-  ];
+  ]);
 
   system.autoUpgrade = {
     enable = true;
