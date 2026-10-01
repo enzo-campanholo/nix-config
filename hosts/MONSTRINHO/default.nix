@@ -43,6 +43,12 @@ in
       KbdInteractiveAuthentication = false;
     };
   };
+  # The router also offers itself as an IPv6 DNS server, and its replies to EDNS queries are malformed
+  # (the OPT record ahead of the answer), which glibc reads as "not found". Keep the DHCPv4 servers only.
+  networking.dhcpcd.extraConfig = ''
+    nooption nd_rdnss
+    nooption dhcp6_name_servers
+  '';
   services.tailscale.enable = true;
   networking.firewall.trustedInterfaces = [ "tailscale0" ];
 
