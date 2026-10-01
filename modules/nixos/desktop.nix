@@ -11,7 +11,11 @@
   services.greetd = {
     enable = true;
     useTextGreeter = true;
-    settings.default_session.command = "${lib.getExe pkgs.tuigreet} --time --remember --cmd ${lib.getExe' config.programs.niri.package "niri-session"}";
+    settings.default_session.command = "${lib.getExe pkgs.tuigreet} --time --remember --background doom --asterisks --cmd ${lib.getExe' config.programs.niri.package "niri-session"}";
+  };
+  console = {
+    packages = [ pkgs.terminus_font ];
+    font = "ter-v24b";
   };
 
   services.logind.settings.Login.HandlePowerKey = "suspend";
