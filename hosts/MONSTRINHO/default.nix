@@ -59,7 +59,7 @@ in
   networking.firewall.trustedInterfaces = [ "tailscale0" ];
 
   users.users = {
-    # Passwords stay out of the repository: root sets isolino's after the install.
+    # Deploys go to root@: making isolino a trusted Nix user would let its agents become root.
     root.openssh.authorizedKeys.keys = [ isolinoKey ];
     isolino = {
       openssh.authorizedKeys.keys = [ isolinoKey ];

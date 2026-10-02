@@ -12,6 +12,6 @@ A daily GitHub Action updates `flake.lock` once the checks and both builds pass.
 
 ## Recovery
 
-- Pick an older generation in the boot menu and run `sudo nixos-rebuild switch --rollback` to make it the default. Then revert or fix the bad commit on GitHub: MONSTRAO installs `main` at every boot and MONSTRINHO every night, and stopping `nixos-upgrade.timer` only lasts until the next reboot.
+- Run `sudo nixos-rebuild switch --rollback`; if MONSTRAO doesn't boot, pick an older generation in the boot menu first. Then revert or fix the bad commit on GitHub: MONSTRAO installs `main` at every boot and MONSTRINHO every night, and stopping `nixos-upgrade.timer` only lasts until the next reboot.
 - MONSTRAO's Secure Boot keys live in `/var/lib/sbctl`. Back them up. If they are lost, nothing new will boot until Secure Boot is turned off or new keys are enrolled.
 - MONSTRAO's 1 GiB EFI partition is shared with Windows. Never delete `EFI/Microsoft`. The boot menu keeps 5 generations so the partition does not fill up.
