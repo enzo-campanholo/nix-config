@@ -113,6 +113,20 @@ in
     };
   };
 
+  # Not t3code.service, the name `t3 service install` gives its own unit, which would override this one.
+  systemd.user.services.t3 = {
+    description = "T3 Code server";
+    wantedBy = [ "default.target" ];
+    enableDefaultPath = false;
+    serviceConfig = {
+      # A port per user from their UID: 31000 for isolino, 31001 for lavietos.
+      ExecStart = "${lib.getExe llmAgents.t3code} serve --host 100.92.247.56 --port 3%U";
+      Restart = "on-failure";
+      # At boot it starts before tailscale0 has its address, so keep retrying until it does.
+      RestartSec = 5;
+    };
+  };
+
   system.autoUpgrade = {
     enable = true;
     flake = "github:enzo-campanholo/nix-config#MONSTRINHO";
