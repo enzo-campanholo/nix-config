@@ -134,6 +134,8 @@ in
     serviceConfig = {
       # A port per user from their UID: 31000 for isolino, 31001 for lavietos.
       ExecStart = "${lib.getExe llmAgents.t3code} serve --host 100.92.247.56 --port 3%U";
+      # It prints a pairing token at startup, and wheel can read every user's journal. Pair with `t3 pair`.
+      StandardOutput = "append:%t/t3.log";
       Restart = "on-failure";
       # At boot it starts before tailscale0 has its address, so keep retrying until it does.
       RestartSec = 5;
