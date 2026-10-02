@@ -41,6 +41,8 @@ in
   # This firmware has no usable adaptive policy: thermald exits and expects a restart to run without one, as upstream's unit does.
   systemd.services.thermald.serviceConfig.Restart = "on-failure";
   zramSwap.enable = true;
+  # A runaway agent gets killed instead of the whole machine thrashing.
+  systemd.oomd.enableUserSlices = true;
 
   services.openssh = {
     enable = true;
