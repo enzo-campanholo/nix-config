@@ -112,9 +112,13 @@ in
     unitConfig.ConditionPathExists = "%h/.hermes/config.yaml";
     # The default PATH would hide the user's tools from the agent.
     enableDefaultPath = false;
+    # Otherwise it downloads a tirith that can't run on NixOS, and runs commands unscanned.
+    environment.TIRITH_BIN = lib.getExe pkgs.tirith;
     serviceConfig = {
       ExecStart = "${lib.getExe llmAgents.hermes-agent} gateway run";
       Restart = "on-failure";
+      # It takes SIGTERM for a crash: dumps diagnostics and skips saving its state.
+      KillSignal = "SIGINT";
     };
   };
 
