@@ -52,11 +52,14 @@ in
     };
   };
   networking.firewall.extraCommands = "iptables -A nixos-fw -p tcp --dport 22 -s 192.168.15.0/24 -j nixos-fw-accept";
-  # dhcpcd's resolvconf hook clears the link's DNS servers in resolved whenever a Router Advertisement brings none.
+  # dhcpcd's resolvconf hook makes each protocol overwrite or clear the whole link's DNS in resolved.
   networking.useNetworkd = true;
-  # The router also offers itself as an IPv6 DNS server, and its replies to EDNS queries are malformed
-  # (the OPT record ahead of the answer). Keep the DHCPv4 servers only.
-  systemd.network.networks."99-ethernet-default-dhcp" = {
+  networking.useDHCP = false;
+  systemd.network.networks."10-ethernet" = {
+    matchConfig.Name = "enp2s0";
+    networkConfig.DHCP = "yes";
+    # The router also offers itself as an IPv6 DNS server, and its replies to EDNS queries are malformed
+    # (the OPT record ahead of the answer). Keep the DHCPv4 servers only.
     ipv6AcceptRAConfig.UseDNS = false;
     dhcpV6Config.UseDNS = false;
   };
