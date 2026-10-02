@@ -49,17 +49,17 @@ in
       KbdInteractiveAuthentication = false;
     };
   };
+  # dhcpcd's resolvconf hook clears the link's DNS servers in resolved whenever a Router Advertisement brings none.
+  networking.useNetworkd = true;
   # The router also offers itself as an IPv6 DNS server, and its replies to EDNS queries are malformed
-  # (the OPT record ahead of the answer), which glibc reads as "not found". Keep the DHCPv4 servers only.
-  networking.dhcpcd.extraConfig = ''
-    nooption nd_rdnss
-    nooption dhcp6_name_servers
-  '';
+  # (the OPT record ahead of the answer). Keep the DHCPv4 servers only.
+  systemd.network.networks."99-ethernet-default-dhcp" = {
+    ipv6AcceptRAConfig.UseDNS = false;
+    dhcpV6Config.UseDNS = false;
+  };
   services.tailscale.enable = true;
   # Without resolved, tailscaled reads the upstream DNS servers when it starts, before DHCP has provided any.
   services.resolved.enable = true;
-  # resolved only accepts dhcpcd's DNS servers through the polkit rule NixOS's dhcpcd module adds.
-  security.polkit.enable = true;
   networking.firewall.trustedInterfaces = [ "tailscale0" ];
 
   users.users = {
