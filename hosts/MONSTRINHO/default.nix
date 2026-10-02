@@ -117,6 +117,10 @@ in
   systemd.user.services.t3 = {
     description = "T3 Code server";
     wantedBy = [ "default.target" ];
+    # Deploys log in as root, whose user manager would otherwise serve T3 Code as root.
+    unitConfig.ConditionUser = "!@system";
+    # Restarting it kills its terminals, along with any switch being run from one.
+    restartIfChanged = false;
     enableDefaultPath = false;
     serviceConfig = {
       # A port per user from their UID: 31000 for isolino, 31001 for lavietos.
