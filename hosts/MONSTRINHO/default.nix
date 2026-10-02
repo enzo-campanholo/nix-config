@@ -56,6 +56,8 @@ in
     nooption dhcp6_name_servers
   '';
   services.tailscale.enable = true;
+  # Without resolved, tailscaled reads the upstream DNS servers when it starts, before DHCP has provided any.
+  services.resolved.enable = true;
   networking.firewall.trustedInterfaces = [ "tailscale0" ];
 
   users.users = {
