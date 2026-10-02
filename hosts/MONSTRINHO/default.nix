@@ -97,12 +97,13 @@ in
   environment.systemPackages = [
     # Ghostty on MONSTRAO sends TERM=xterm-ghostty over SSH.
     pkgs.ghostty.terminfo
+    # The wrapper only adds providers to PATH: claude and codex are installed anyway, and the rest go unused.
+    llmAgents.t3code.unwrapped
   ]
   ++ (with llmAgents; [
     claude-code
     codex
     hermes-agent
-    t3code
   ]);
 
   # `hermes gateway install` writes a unit that runs Nix's bare Python, which can't load Hermes.
@@ -134,7 +135,7 @@ in
     environment.T3CODE_TELEMETRY_ENABLED = "false";
     serviceConfig = {
       # A port per user from their UID: 31000 for isolino, 31001 for lavietos.
-      ExecStart = "${lib.getExe llmAgents.t3code} serve --host 100.92.247.56 --port 3%U";
+      ExecStart = "${lib.getExe llmAgents.t3code.unwrapped} serve --host 100.92.247.56 --port 3%U";
       # It prints a pairing token at startup, and wheel can read every user's journal. Pair with `t3 pair`.
       StandardOutput = "append:%t/t3.log";
       Restart = "on-failure";
