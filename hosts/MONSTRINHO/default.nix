@@ -44,11 +44,14 @@ in
 
   services.openssh = {
     enable = true;
+    # Only from the LAN and over Tailscale, not on the public IPv6 address.
+    openFirewall = false;
     settings = {
       PasswordAuthentication = false;
       KbdInteractiveAuthentication = false;
     };
   };
+  networking.firewall.extraCommands = "iptables -A nixos-fw -p tcp --dport 22 -s 192.168.15.0/24 -j nixos-fw-accept";
   # dhcpcd's resolvconf hook clears the link's DNS servers in resolved whenever a Router Advertisement brings none.
   networking.useNetworkd = true;
   # The router also offers itself as an IPv6 DNS server, and its replies to EDNS queries are malformed
