@@ -1,6 +1,12 @@
-{ inputs, pkgs, ... }:
+{
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
 let
   isolinoKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHmdvVI+bCuVV30u90N68GFXu4SY439a9wKV1SOIr7Rs isolino@MONSTRAO";
+  llmAgents = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
 in
 {
   imports = [
@@ -82,13 +88,26 @@ in
     # Ghostty on MONSTRAO sends TERM=xterm-ghostty over SSH.
     pkgs.ghostty.terminfo
   ]
-  ++ (with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
+  ++ (with llmAgents; [
     claude-code
     codex
     hermes-agent
     openclaw
     t3code
   ]);
+
+  # `hermes gateway install` writes a unit that runs Nix's bare Python, which can't load Hermes.
+  systemd.user.services.hermes = {
+    description = "Hermes Agent gateway";
+    wantedBy = [ "default.target" ];
+    unitConfig.ConditionPathExists = "%h/.hermes/config.yaml";
+    # The default PATH would hide the user's tools from the agent.
+    enableDefaultPath = false;
+    serviceConfig = {
+      ExecStart = "${lib.getExe llmAgents.hermes-agent} gateway run";
+      Restart = "on-failure";
+    };
+  };
 
   system.autoUpgrade = {
     enable = true;
