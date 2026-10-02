@@ -139,6 +139,9 @@ in
       Restart = "on-failure";
       # At boot it starts before tailscale0 has its address, so keep retrying until it does.
       RestartSec = 5;
+      # It can hang on SIGTERM until killed, holding up shutdown, and exits 130 when it does stop.
+      TimeoutStopSec = 10;
+      SuccessExitStatus = 130;
     };
   };
 
