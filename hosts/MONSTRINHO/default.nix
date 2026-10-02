@@ -131,6 +131,7 @@ in
     # Restarting it kills its terminals, along with any switch being run from one.
     restartIfChanged = false;
     enableDefaultPath = false;
+    environment.T3CODE_TELEMETRY_ENABLED = "false";
     serviceConfig = {
       # A port per user from their UID: 31000 for isolino, 31001 for lavietos.
       ExecStart = "${lib.getExe llmAgents.t3code} serve --host 100.92.247.56 --port 3%U";
