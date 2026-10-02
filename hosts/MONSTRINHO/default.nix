@@ -58,6 +58,8 @@ in
   services.tailscale.enable = true;
   # Without resolved, tailscaled reads the upstream DNS servers when it starts, before DHCP has provided any.
   services.resolved.enable = true;
+  # resolved only accepts dhcpcd's DNS servers through the polkit rule NixOS's dhcpcd module adds.
+  security.polkit.enable = true;
   networking.firewall.trustedInterfaces = [ "tailscale0" ];
 
   users.users = {
