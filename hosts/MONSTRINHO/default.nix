@@ -96,7 +96,6 @@ in
     claude-code
     codex
     hermes-agent
-    openclaw
     t3code
   ]);
 
