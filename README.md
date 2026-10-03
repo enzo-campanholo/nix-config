@@ -10,6 +10,15 @@ nh os switch        # or: sudo nixos-rebuild switch --flake ~/nix-config
 
 A daily GitHub Action updates `flake.lock` once the checks and both builds pass. MONSTRAO then installs that commit for the next boot, and MONSTRINHO switches to it at 04:40, or, if the kernel or initrd changed, reboots into it between 04:00 and 06:00 and otherwise leaves it for the next boot. Either way it replaces anything switched to locally, so push local changes.
 
+## Tailscale
+
+Both machines enable Tailscale and systemd-resolved in the common module. After rebuilding MONSTRAO, run `sudo tailscale up` and follow its login URL to join the same tailnet as MONSTRINHO. The login is stored in `/var/lib/tailscale` and survives rebuilds and reboots.
+
+```sh
+sudo tailscale up
+tailscale ping MONSTRINHO
+```
+
 ## Recovery
 
 - Run `sudo nixos-rebuild switch --rollback`; if a machine doesn't boot, pick an older generation in its boot menu first. Then revert or fix the bad commit on GitHub: MONSTRAO installs `main` at every boot and MONSTRINHO every night, and stopping `nixos-upgrade.timer` only lasts until the next reboot.

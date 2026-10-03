@@ -65,9 +65,6 @@ in
     ipv6AcceptRAConfig.UseDNS = false;
     dhcpV6Config.UseDNS = false;
   };
-  services.tailscale.enable = true;
-  # Without resolved, tailscaled reads the upstream DNS servers when it starts, before DHCP has provided any.
-  services.resolved.enable = true;
   networking.firewall.trustedInterfaces = [ "tailscale0" ];
 
   users.users = {
