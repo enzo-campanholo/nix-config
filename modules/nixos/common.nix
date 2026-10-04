@@ -18,6 +18,9 @@
   };
   system.configurationRevision = inputs.self.rev or inputs.self.dirtyRev or null;
 
+  # Otherwise anyone at the boot menu can add init=/bin/sh to the kernel command line.
+  boot.loader.systemd-boot.editor = false;
+
   time.timeZone = "America/Sao_Paulo";
 
   services.tailscale.enable = true;
