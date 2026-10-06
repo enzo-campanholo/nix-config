@@ -42,4 +42,5 @@
 
   security.rtkit.enable = true;
   services.gvfs.enable = true;
+  services.speechd.enable = false;
 }

@@ -23,6 +23,8 @@
 
   time.timeZone = "America/Sao_Paulo";
 
+  services.fwupd.enable = true;
+
   services.tailscale.enable = true;
   # Without resolved, tailscaled reads the upstream DNS servers when it starts, before DHCP has provided any.
   services.resolved.enable = true;

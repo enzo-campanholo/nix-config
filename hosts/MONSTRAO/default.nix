@@ -16,6 +16,7 @@
       # The 1 GiB ESP is shared with Windows.
       configurationLimit = 5;
     };
+    # CoolerControl needs this driver for the board's Nuvoton NCT6799 fan controller, and nothing loads it automatically.
     kernelModules = [ "nct6775" ];
   };
   environment.systemPackages = [ pkgs.sbctl ];
@@ -58,14 +59,14 @@
     ];
   };
 
-  # The Logitech receiver wakes the machine from S3 a few seconds after every suspend
-  # (/sys/power/pm_wakeup_irq and its wakeup counters); the keyboard and power button still wake it.
+  # The Logitech receiver (c547) wakes the machine from S3 a few seconds after every suspend
+  # (/sys/power/pm_wakeup_irq and its wakeup counters). The mouse on its charging cable (c094) is
+  # disabled too, so only the keyboard and power button wake it.
   services.udev.extraRules = ''
-    ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="046d", ATTR{idProduct}=="c547", ATTR{power/wakeup}="disabled"
+    ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="046d", ATTR{idProduct}=="c547|c094", ATTR{power/wakeup}="disabled"
   '';
 
   programs.coolercontrol.enable = true;
-  services.fwupd.enable = true;
 
   system.autoUpgrade = {
     enable = true;

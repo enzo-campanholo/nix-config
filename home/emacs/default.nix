@@ -15,10 +15,7 @@
         cider
         web-mode
         nix-mode
-        (treesit-grammars.with-grammars (g: [
-          g.tree-sitter-typescript
-          g.tree-sitter-tsx
-        ]))
+        (treesit-grammars.with-grammars (g: [ g.tree-sitter-typescript ]))
         (trivialBuild {
           pname = "sail-mode";
           inherit (pkgs.ocamlPackages.sail) version src;

@@ -2,7 +2,8 @@ name: Update flake.lock
 
 on:
   schedule:
-    - cron: "0 4 * * *"
+    # 18:23 in São Paulo. Scheduled runs have started up to 7 h late, and both machines upgrade at 04:40.
+    - cron: "23 21 * * *"
   workflow_dispatch:
 
 permissions:
