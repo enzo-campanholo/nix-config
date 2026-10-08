@@ -14,6 +14,7 @@
         clojure-mode
         cider
         web-mode
+        markdown-mode
         nix-mode
         (treesit-grammars.with-grammars (g: [ g.tree-sitter-typescript ]))
         (trivialBuild {

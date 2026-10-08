@@ -27,6 +27,10 @@
 (use-package web-mode
   :mode ("\\.html?\\'" "\\.[jt]sx\\'"))
 
+(use-package markdown-mode
+  :mode ("\\.md\\'" . gfm-mode)
+  :custom (markdown-fontify-code-blocks-natively t))
+
 (use-package sail-mode
   :mode ("\\.sail\\'" . sail-mode))
 
