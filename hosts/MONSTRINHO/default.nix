@@ -134,7 +134,8 @@ in
     environment.T3CODE_TELEMETRY_ENABLED = "false";
     serviceConfig = {
       # A port per user from their UID: 31000 for isolino, 31001 for lavietos.
-      ExecStart = "${lib.getExe llmAgents.t3code.unwrapped} serve --host 100.92.247.56 --port 3%U";
+      # Every address, so T3 Connect's Cloudflare tunnel can reach it; the firewall keeps it off the LAN.
+      ExecStart = "${lib.getExe llmAgents.t3code.unwrapped} serve --host 0.0.0.0 --port 3%U";
       # It prints a pairing token at startup, and wheel can read every user's journal. Pair with `t3 pair`.
       StandardOutput = "append:%t/t3.log";
       Restart = "on-failure";
