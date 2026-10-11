@@ -139,7 +139,6 @@ in
       # It prints a pairing token at startup, and wheel can read every user's journal. Pair with `t3 pair`.
       StandardOutput = "append:%t/t3.log";
       Restart = "on-failure";
-      # At boot it starts before tailscale0 has its address, so keep retrying until it does.
       RestartSec = 5;
       # Its terminals run interactive shells, which ignore SIGTERM but not SIGHUP.
       SendSIGHUP = true;

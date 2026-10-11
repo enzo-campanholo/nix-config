@@ -25,6 +25,19 @@ sudo tailscale up
 tailscale ping MONSTRINHO
 ```
 
+## T3 Code on MONSTRINHO
+
+Each user has a Nix-managed `t3.service`: isolino uses port 31000 and lavietos uses 31001. Direct access is restricted by the firewall to Tailscale; loopback access also lets T3 Connect's managed tunnel reach the server.
+
+To enable T3 Connect, run these as the user whose environment you want to connect to:
+
+```sh
+t3 connect link --headless
+systemctl --user restart t3
+```
+
+Linking saves setup for the next server start. Use `systemctl --user status t3`, not `t3 service status`: the latter only checks T3's own installer. Don't run `t3 service install` alongside the Nix-managed service. Restarting T3 interrupts its terminals.
+
 ## Recovery
 
 - Run `sudo nixos-rebuild switch --rollback`; if a machine doesn't boot, pick an older generation in its boot menu first. Then revert or fix the bad commit on GitHub: both machines reinstall `main` daily, and stopping `nixos-upgrade.timer` only lasts until the next reboot.
