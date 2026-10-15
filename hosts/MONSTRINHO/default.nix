@@ -141,7 +141,11 @@ in
     # A switch that changes it restarts it, so the nightly upgrade picks up new versions. That kills its terminals,
     # and with them any switch run from one: deploy from MONSTRAO, or use `nh os boot`, never `nh os switch` here.
     enableDefaultPath = false;
-    environment.T3CODE_TELEMETRY_ENABLED = "false";
+    environment = {
+      T3CODE_TELEMETRY_ENABLED = "false";
+      # T3 Connect's tunnel, which T3 otherwise downloads into ~/.t3/tools.
+      T3CODE_CLOUDFLARED_PATH = lib.getExe pkgs.cloudflared;
+    };
     serviceConfig = {
       # A port per user from their UID: 31000 for isolino, 31001 for lavietos.
       # Every address, so T3 Connect's Cloudflare tunnel can reach it; the firewall keeps it off the LAN.
