@@ -21,6 +21,20 @@
       enable = true;
       nix-direnv.enable = true;
     };
+    claude-code = {
+      enable = true;
+      # Installed system-wide.
+      package = null;
+      # Claude Code saves its own preferences, like the model, to the same file.
+      mutableSettings = true;
+      settings = {
+        autoMemoryEnabled = false;
+        attribution = {
+          commit = "";
+          pr = "";
+        };
+      };
+    };
     nix-index-database.comma.enable = true;
     gh.enable = true;
     git = {
