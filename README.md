@@ -25,6 +25,17 @@ sudo tailscale up
 tailscale ping MONSTRINHO
 ```
 
+## Claude subscriptions
+
+Both machines run CLIProxyAPI on 127.0.0.1:8317, which uses one Claude subscription until it runs out and then the other. Claude Code sends its model requests there and keeps its own claude.ai login for everything else. On MONSTRINHO the firewall lets only isolino reach it.
+
+Log each machine's proxy in to both subscriptions, running the command once per account. Open the URL it prints, approve, and paste back the URL of the `localhost` page that fails to load. The logins are kept in `/var/lib/cliproxyapi`, not in the repo.
+
+```sh
+cd / && sudo -u cliproxyapi cliproxyapi -config /var/lib/cliproxyapi/config.yaml --claude-login -no-browser
+ssh -t root@MONSTRINHO 'cd /var/lib/cliproxyapi && runuser -u cliproxyapi -- cliproxyapi -config config.yaml --claude-login -no-browser'
+```
+
 ## T3 Code on MONSTRINHO
 
 Each user has a Nix-managed `t3.service`: isolino uses port 31000 and lavietos uses 31001. Direct access is restricted by the firewall to Tailscale; loopback access also lets T3 Connect's managed tunnel reach the server.
