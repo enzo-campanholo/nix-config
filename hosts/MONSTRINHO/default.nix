@@ -41,25 +41,11 @@ in
   # This firmware has no usable adaptive policy: thermald exits and expects a restart to run without one, as upstream's unit does.
   systemd.services.thermald.serviceConfig.Restart = "on-failure";
   zramSwap.enable = true;
-  # Disk-backed overflow keeps memory spikes from exhausting zram as well as RAM.
-  swapDevices = [
-    {
-      device = "/var/lib/swapfile";
-      size = 8 * 1024; # MiB
-      priority = 0; # Prefer zram (priority 5).
-    }
-  ];
-  # A runaway agent gets killed instead of the whole machine thrashing.
-  systemd.oomd = {
-    enableUserSlices = true;
-    settings.OOM = {
-      DefaultMemoryPressureDurationSec = "10s";
-      SwapUsedLimit = "80%";
-    };
-  };
+  # A runaway agent can't make the machine unresponsive: once users' processes reach these, the kernel kills
+  # the largest one at once. Even if nothing compresses in zram, 1.5 GiB of RAM stays free for the system.
   systemd.slices.user.sliceConfig = {
-    ManagedOOMMemoryPressureLimit = "50%";
-    ManagedOOMSwap = "kill";
+    MemoryMax = "5G";
+    MemorySwapMax = "1G";
   };
 
   services.openssh = {
