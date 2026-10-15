@@ -7,14 +7,13 @@
 {
   imports = [ inputs.home-manager.nixosModules.home-manager ];
 
-  environment.systemPackages =
-    (with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
-      claude-code
-      codex
-      pi
-    ])
+  environment.systemPackages = with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
+    claude-code
+    codex
+    pi
     # For logging the proxy in to the subscriptions.
-    ++ [ config.services.cliproxyapi.package ];
+    config.services.cliproxyapi.package
+  ];
 
   # Pools the Claude subscriptions, using each until it runs out. It takes no client keys, so Claude Code
   # keeps its claude.ai login, and the features that need it, while sending model requests here.
