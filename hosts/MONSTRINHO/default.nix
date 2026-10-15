@@ -1,4 +1,5 @@
 {
+  config,
   inputs,
   lib,
   pkgs,
@@ -7,6 +8,8 @@
 let
   isolinoKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHmdvVI+bCuVV30u90N68GFXu4SY439a9wKV1SOIr7Rs isolino@MONSTRAO";
   llmAgents = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
+  # The subscription proxy takes no client keys, so this is what keeps lavietos's agents off isolino's subscriptions.
+  proxyOnlyForIsolino = "OUTPUT -o lo -p tcp --dport ${toString config.services.cliproxyapi.settings.server.port} -m owner ! --uid-owner isolino -j REJECT";
 in
 {
   imports = [
@@ -57,7 +60,13 @@ in
       KbdInteractiveAuthentication = false;
     };
   };
-  networking.firewall.extraCommands = "iptables -A nixos-fw -p tcp --dport 22 -s 192.168.15.0/24 -j nixos-fw-accept";
+  networking.firewall = {
+    extraCommands = ''
+      iptables -A nixos-fw -p tcp --dport 22 -s 192.168.15.0/24 -j nixos-fw-accept
+      iptables -A ${proxyOnlyForIsolino}
+    '';
+    extraStopCommands = "iptables -D ${proxyOnlyForIsolino} || true";
+  };
   # dhcpcd's resolvconf hook makes each protocol overwrite or clear the whole link's DNS in resolved.
   networking.useNetworkd = true;
   networking.useDHCP = false;
