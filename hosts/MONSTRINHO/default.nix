@@ -133,11 +133,12 @@ in
   # Not t3code.service, the name `t3 service install` gives its own unit, which would override this one.
   systemd.user.services.t3 = {
     description = "T3 Code server";
+    # A switch that changes it restarts it, so the nightly upgrade picks up new versions. That kills its terminals,
+    # and with them any switch run from one: deploy from MONSTRAO, or use `nh os boot`, never `nh os switch` here.
     wantedBy = [ "default.target" ];
     # Deploys log in as root, whose user manager would otherwise serve T3 Code as root.
     unitConfig.ConditionUser = "!@system";
-    # A switch that changes it restarts it, so the nightly upgrade picks up new versions. That kills its terminals,
-    # and with them any switch run from one: deploy from MONSTRAO, or use `nh os boot`, never `nh os switch` here.
+    # The default PATH would hide the user's tools from its agents and terminals.
     enableDefaultPath = false;
     environment = {
       T3CODE_TELEMETRY_ENABLED = "false";
