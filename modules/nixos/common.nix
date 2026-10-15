@@ -22,6 +22,8 @@
     settings = {
       server.host = "127.0.0.1";
       routing.strategy = "fill-first";
+      # Otherwise it downloads its web panel from GitHub at every start, though nothing uses it.
+      management.disable-control-panel = true;
     };
   };
 
