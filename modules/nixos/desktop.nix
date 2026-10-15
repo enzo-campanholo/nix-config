@@ -20,7 +20,7 @@
   # The GPU driver replaces the firmware framebuffer after systemd-vconsole-setup has run, which resets
   # the console to the kernel's font. systemd only reapplies the font for new vtcon devices, and this isn't one.
   services.udev.extraRules = ''
-    ACTION=="add", SUBSYSTEM=="graphics", KERNEL=="fb[0-9]*", RUN+="${config.systemd.package}/bin/systemctl --no-block restart systemd-vconsole-setup.service"
+    ACTION=="add", SUBSYSTEM=="graphics", KERNEL=="fb[0-9]*", RUN+="${lib.getExe' config.systemd.package "systemctl"} --no-block restart systemd-vconsole-setup.service"
   '';
 
   services.logind.settings.Login.HandlePowerKey = "suspend";
