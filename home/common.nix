@@ -1,4 +1,9 @@
-{ inputs, pkgs, ... }:
+{
+  inputs,
+  osConfig,
+  pkgs,
+  ...
+}:
 {
   imports = [ inputs.nix-index-database.homeModules.default ];
 
@@ -33,6 +38,11 @@
           commit = "";
           pr = "";
         };
+        env.ANTHROPIC_BASE_URL =
+          let
+            proxy = osConfig.services.cliproxyapi.settings.server;
+          in
+          "http://${proxy.host}:${toString proxy.port}";
       };
     };
     nix-index-database.comma.enable = true;
