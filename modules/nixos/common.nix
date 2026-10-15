@@ -54,6 +54,7 @@
   # Without resolved, tailscaled reads the upstream DNS servers when it starts, before DHCP has provided any.
   services.resolved.enable = true;
 
+  # Completions for system packages in fish, which Ghostty starts. The login shell stays bash.
   programs.fish.enable = true;
 
   programs.nh = {
