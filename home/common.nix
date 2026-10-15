@@ -4,17 +4,11 @@
 
   home = {
     stateVersion = "26.05";
-    packages =
-      (with pkgs; [
-        ripgrep
-        fd
-        jq
-      ])
-      ++ (with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
-        claude-code
-        codex
-        pi
-      ]);
+    packages = with pkgs; [
+      ripgrep
+      fd
+      jq
+    ];
   };
 
   programs = {

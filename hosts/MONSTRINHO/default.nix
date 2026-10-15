@@ -116,12 +116,8 @@ in
     pkgs.ghostty.terminfo
     # The wrapper only adds providers to PATH: claude and codex are installed anyway, and the rest go unused.
     llmAgents.t3code.unwrapped
-  ]
-  ++ (with llmAgents; [
-    claude-code
-    codex
-    hermes-agent
-  ]);
+    llmAgents.hermes-agent
+  ];
 
   # `hermes gateway install` writes a unit that runs Nix's bare Python, which can't load Hermes.
   systemd.user.services.hermes = {

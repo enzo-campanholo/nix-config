@@ -1,6 +1,12 @@
-{ inputs, ... }:
+{ inputs, pkgs, ... }:
 {
   imports = [ inputs.home-manager.nixosModules.home-manager ];
+
+  environment.systemPackages = with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
+    claude-code
+    codex
+    pi
+  ];
 
   nix = {
     channel.enable = false;
