@@ -44,11 +44,20 @@ in
   # This firmware has no usable adaptive policy: thermald exits and expects a restart to run without one, as upstream's unit does.
   systemd.services.thermald.serviceConfig.Restart = "on-failure";
   zramSwap.enable = true;
-  # A runaway agent can't make the machine unresponsive: once users' processes reach these, the kernel kills
-  # the largest one at once. Even if nothing compresses in zram, 1.5 GiB of RAM stays free for the system.
+  # Leave RAM outside users' workloads even if their zram pages don't compress.
   systemd.slices.user.sliceConfig = {
     MemoryMax = "5G";
     MemorySwapMax = "1G";
+  };
+  # T3 sizes app-t3code-agents.slice from physical RAM (5.6 GiB here), exceeding the shared user.slice cap.
+  # Its parent isn't rewritten by T3; bound each user's agents and terminals before the shared cap is hit.
+  systemd.user.slices.app-t3code.sliceConfig = {
+    MemoryHigh = "2G";
+    MemoryMax = "2560M";
+    MemorySwapMax = "512M";
+    ManagedOOMMemoryPressure = "kill";
+    ManagedOOMMemoryPressureLimit = "40%";
+    ManagedOOMMemoryPressureDurationSec = "5s";
   };
 
   services.openssh = {
