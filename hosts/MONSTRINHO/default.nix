@@ -51,13 +51,12 @@ in
   };
   # T3 sizes app-t3code-agents.slice from physical RAM (5.6 GiB here), exceeding the shared user.slice cap.
   # Its parent isn't rewritten by T3; bound each user's agents and terminals before the shared cap is hit.
+  # No ManagedOOMMemoryPressure: oomd killed an agent running `nix flake check` well below MemoryMax, and T3, which
+  # only watches for the kernel's OOM kills, left its thread running forever.
   systemd.user.slices.app-t3code.sliceConfig = {
     MemoryHigh = "2G";
     MemoryMax = "2560M";
     MemorySwapMax = "512M";
-    ManagedOOMMemoryPressure = "kill";
-    ManagedOOMMemoryPressureLimit = "40%";
-    ManagedOOMMemoryPressureDurationSec = "5s";
   };
 
   services.openssh = {
