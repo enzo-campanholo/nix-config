@@ -46,17 +46,20 @@ in
   zramSwap.enable = true;
   # Leave RAM outside users' workloads even if their zram pages don't compress.
   systemd.slices.user.sliceConfig = {
-    MemoryMax = "5G";
-    MemorySwapMax = "1G";
+    MemoryMax = "6G";
+    MemorySwapMax = "2G";
   };
-  # T3 sizes app-t3code-agents.slice from physical RAM (5.6 GiB here), exceeding the shared user.slice cap.
-  # Its parent isn't rewritten by T3; bound each user's agents and terminals before the shared cap is hit.
-  # No ManagedOOMMemoryPressure: oomd killed an agent running `nix flake check` well below MemoryMax, and T3, which
-  # only watches for the kernel's OOM kills, left its thread running forever.
+  # T3 sizes app-t3code-agents.slice from physical RAM (5.6 GiB here) and doesn't rewrite its parent, so bound each
+  # user's agents and terminals here. Both users' (2 × 2G), the T3 servers and lavietos's Hermes (~1.1G) fit under the
+  # shared cap, so a busy agent can't make the T3 servers thrash.
+  # oomd kills the agent under pressure, and T3 fails its turn for Claude and pi. 80%: at 40%, oomd killed an agent
+  # running `nix flake check` that wasn't starved.
   systemd.user.slices.app-t3code.sliceConfig = {
-    MemoryHigh = "2G";
-    MemoryMax = "2560M";
-    MemorySwapMax = "512M";
+    MemoryHigh = "1792M";
+    MemoryMax = "2G";
+    MemorySwapMax = "768M";
+    ManagedOOMMemoryPressure = "kill";
+    ManagedOOMMemoryPressureLimit = "80%";
   };
 
   services.openssh = {
