@@ -9,7 +9,6 @@
 
   environment.systemPackages = with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
     claude-code
-    codex
     pi
     # For logging the proxy in to the subscriptions.
     config.services.cliproxyapi.package

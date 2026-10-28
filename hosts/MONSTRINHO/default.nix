@@ -146,7 +146,7 @@ in
   environment.systemPackages = [
     # Ghostty on MONSTRAO sends TERM=xterm-ghostty over SSH.
     pkgs.ghostty.terminfo
-    # The wrapper only adds providers to PATH: claude and codex are installed anyway, and the rest go unused.
+    # The wrapper only adds providers to PATH: claude and pi are installed anyway, and the rest go unused.
     llmAgents.t3code.unwrapped
     llmAgents.hermes-agent
   ];
