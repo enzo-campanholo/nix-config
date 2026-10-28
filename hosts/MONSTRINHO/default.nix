@@ -118,6 +118,31 @@ in
   ];
 
   programs.git.enable = true;
+  # T3's bundled chrome-headless-shell and downloaded browsers like Playwright's are generic Linux binaries, which
+  # NixOS can't run otherwise.
+  programs.nix-ld = {
+    enable = true;
+    libraries = with pkgs; [
+      glib
+      nspr
+      nss
+      dbus
+      at-spi2-core
+      libx11
+      libxcomposite
+      libxdamage
+      libxext
+      libxfixes
+      libxrandr
+      libxcb
+      libxkbcommon
+      libgbm
+      expat
+      alsa-lib
+      fontconfig
+      freetype
+    ];
+  };
   environment.systemPackages = [
     # Ghostty on MONSTRAO sends TERM=xterm-ghostty over SSH.
     pkgs.ghostty.terminfo
