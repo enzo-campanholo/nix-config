@@ -49,6 +49,12 @@ in
     MemoryMax = "6G";
     MemorySwapMax = "2G";
   };
+  # Users' builds, their agents' included, run in nix-daemon, outside user.slice; root's, like the nightly upgrade's,
+  # don't go through it. Substituting fills it mostly with page cache, which MemoryHigh reclaims first.
+  systemd.services.nix-daemon.serviceConfig = {
+    MemoryHigh = "2.5G";
+    MemoryMax = "3G";
+  };
   # T3 sizes app-t3code-agents.slice from physical RAM (5.6 GiB here) and doesn't rewrite its parent, so bound each
   # user's agents and terminals here. Both users' (2 × 2G), the T3 servers and lavietos's Hermes (~1.1G) fit under the
   # shared cap, so a busy agent can't make the T3 servers thrash.
