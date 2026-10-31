@@ -119,6 +119,8 @@ in
       linger = true;
     };
   };
+  # With no wheel, sudo is only a setuid-root binary for agents to probe.
+  security.sudo.enable = false;
 
   systemd.tmpfiles.rules = [
     "d /srv/isolino 0700 isolino users"
