@@ -11,7 +11,7 @@ The code and the running machines are the only source of truth. Comments, commit
 - MONSTRAO never locks, blanks or suspends by itself. Manual suspend asks for the password on resume.
 - MONSTRAO keeps 5 boot entries: its EFI partition is shared with Windows. Never touch EFI/Microsoft.
 - Everything installed on either machine is declared here.
-- lavietos has no wheel. Deploys go to root@ because a trusted isolino would let its agents become root.
+- No user on MONSTRINHO has wheel. Deploys go to root@ because a trusted isolino would let its agents become root.
 
 ## Every change
 1. `nix fmt`, `nix flake check`.
