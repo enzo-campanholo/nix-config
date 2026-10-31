@@ -163,6 +163,8 @@ in
       Restart = "on-failure";
       # It takes SIGTERM for a crash: dumps diagnostics and skips saving its state.
       KillSignal = "SIGINT";
+      # Keeps the files its agents create, in /tmp too, private to their user.
+      UMask = "0077";
     };
   };
 
@@ -194,6 +196,8 @@ in
       # In case it still hangs, don't hold up shutdown. A clean stop exits 130.
       TimeoutStopSec = 10;
       SuccessExitStatus = 130;
+      # Keeps the files its agents and terminals create, in /tmp too, private to their user.
+      UMask = "0077";
     };
   };
   # Browsers only give HTTPS pages the clipboard API, which T3 copies paths with. Serve's other ports are set by hand
