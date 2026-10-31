@@ -66,6 +66,8 @@ in
     enable = true;
     # Only from the LAN and over Tailscale, not on the public IPv6 address.
     openFirewall = false;
+    # Every key is declared here: an agent could otherwise let anyone in as its user by adding one to ~/.ssh.
+    authorizedKeysInHomedir = false;
     settings = {
       PasswordAuthentication = false;
       KbdInteractiveAuthentication = false;
