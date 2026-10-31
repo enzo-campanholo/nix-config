@@ -205,8 +205,8 @@ in
       UMask = "0077";
     };
   };
-  # Browsers only give HTTPS pages the clipboard API, which T3 copies paths with. Serve's other ports are set by hand
-  # for development, so this adds and removes only its own: each user's T3 port 3%U at https://monstrinho:4%U.
+  # Browsers only give HTTPS pages the clipboard API, which T3 copies paths with: each user's T3 port 3%U is served at
+  # https://monstrinho:4%U. This owns the whole serve config, so nothing served by hand outlives a restart.
   systemd.services.t3-tailscale-serve = {
     description = "Serve T3 Code over HTTPS on the tailnet";
     after = [ "tailscaled.service" ];
@@ -214,13 +214,11 @@ in
     wantedBy = [ "multi-user.target" ];
     path = [ config.services.tailscale.package ];
     script = ''
+      tailscale serve reset
       tailscale serve --bg --https=41000 http://127.0.0.1:31000
       tailscale serve --bg --https=41001 http://127.0.0.1:31001
     '';
-    preStop = ''
-      tailscale serve --https=41000 off
-      tailscale serve --https=41001 off
-    '';
+    preStop = "tailscale serve reset";
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
