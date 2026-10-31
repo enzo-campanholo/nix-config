@@ -170,7 +170,7 @@ in
   systemd.user.services.t3 = {
     description = "T3 Code server";
     # A switch that changes it restarts it, so the nightly upgrade picks up new versions. That kills its terminals,
-    # and with them any switch run from one: deploy from MONSTRAO, or use `nh os boot`, never `nh os switch` here.
+    # and with them any switch run from one: deploy from MONSTRAO.
     wantedBy = [ "default.target" ];
     # Deploys log in as root, whose user manager would otherwise serve T3 Code as root.
     unitConfig.ConditionUser = "!@system";

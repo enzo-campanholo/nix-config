@@ -68,6 +68,8 @@
 
   programs.coolercontrol.enable = true;
 
+  programs.nh.flake = "/home/isolino/nix-config";
+
   system.autoUpgrade = {
     enable = true;
     flake = "github:enzo-campanholo/nix-config#MONSTRAO";

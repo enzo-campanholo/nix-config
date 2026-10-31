@@ -58,7 +58,6 @@
 
   programs.nh = {
     enable = true;
-    flake = "/home/isolino/nix-config";
     clean = {
       enable = true;
       extraArgs = "--keep 5 --no-direnv";
