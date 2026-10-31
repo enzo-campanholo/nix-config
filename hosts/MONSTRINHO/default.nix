@@ -242,7 +242,7 @@ in
 
   system.autoUpgrade = {
     enable = true;
-    flake = "github:enzo-campanholo/nix-config#MONSTRINHO";
+    flake = "github:enzo-campanholo/nix-config-legacy#MONSTRINHO";
     upgrade = false;
     allowReboot = true;
     rebootWindow = {

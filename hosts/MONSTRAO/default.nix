@@ -74,7 +74,7 @@
 
   system.autoUpgrade = {
     enable = true;
-    flake = "github:enzo-campanholo/nix-config#MONSTRAO";
+    flake = "github:enzo-campanholo/nix-config-legacy#MONSTRAO";
     upgrade = false;
     # Never load a new NVIDIA driver under a running session.
     operation = "boot";
