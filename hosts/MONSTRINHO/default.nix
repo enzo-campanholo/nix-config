@@ -212,14 +212,18 @@ in
     };
   };
   # Browsers only give HTTPS pages the clipboard API, which T3 copies paths with: each user's T3 port 3%U is served at
-  # https://monstrinho:4%U. This owns the whole serve config, so nothing served by hand outlives a restart.
+  # https://monstrinho.<tailnet>.ts.net:4%U, the only name its certificate covers. This owns the whole serve config, so
+  # nothing served by hand outlives a restart.
   systemd.services.t3-tailscale-serve = {
     description = "Serve T3 Code over HTTPS on the tailnet";
     after = [ "tailscaled.service" ];
     wants = [ "tailscaled.service" ];
     wantedBy = [ "multi-user.target" ];
     path = [ config.services.tailscale.package ];
+    # tailscaled reports ready while its backend is still NoState, which serve rejects as "unexpected state: NoState".
+    # Not after tailscale-online.target: it waits without a timeout, which could hang switches and boot.
     script = ''
+      tailscale wait --timeout=1m
       tailscale serve reset
       tailscale serve --bg --https=41000 http://127.0.0.1:31000
       tailscale serve --bg --https=41001 http://127.0.0.1:31001
@@ -228,7 +232,7 @@ in
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
-      # Right after boot tailscaled may not have its certificate domain yet.
+      # In case tailscaled takes longer, as without network at boot.
       Restart = "on-failure";
       RestartSec = 5;
     };
