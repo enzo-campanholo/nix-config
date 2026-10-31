@@ -104,7 +104,10 @@ in
       openssh.authorizedKeys.keys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJU9VqlHeLAvukPFLKW8vN4BedMxQBasFvn6JYD4NCZe luis@DESKTOP-I16FQN7"
       ];
-      packages = [ pkgs.python3 ];
+      packages = [
+        pkgs.python3
+        llmAgents.hermes-agent
+      ];
       linger = true;
     };
   };
@@ -148,14 +151,16 @@ in
     pkgs.ghostty.terminfo
     # The wrapper only adds providers to PATH: claude and pi are installed anyway, and the rest go unused.
     llmAgents.t3code.unwrapped
-    llmAgents.hermes-agent
   ];
 
   # `hermes gateway install` writes a unit that runs Nix's bare Python, which can't load Hermes.
   systemd.user.services.hermes = {
     description = "Hermes Agent gateway";
     wantedBy = [ "default.target" ];
-    unitConfig.ConditionPathExists = "%h/.hermes/config.yaml";
+    unitConfig = {
+      ConditionUser = "lavietos";
+      ConditionPathExists = "%h/.hermes/config.yaml";
+    };
     # The default PATH would hide the user's tools from the agent.
     enableDefaultPath = false;
     serviceConfig = {
