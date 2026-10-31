@@ -94,11 +94,11 @@ in
   users.users = {
     # Deploys go to root@: making isolino a trusted Nix user would let its agents become root.
     root.openssh.authorizedKeys.keys = [ isolinoKey ];
+    # No wheel for either user: our agents run as us, and sudo would give them the whole machine.
     isolino = {
       openssh.authorizedKeys.keys = [ isolinoKey ];
       linger = true;
     };
-    # No wheel: lavietos's agents run as lavietos, and sudo would give them the whole machine.
     lavietos = {
       isNormalUser = true;
       openssh.authorizedKeys.keys = [

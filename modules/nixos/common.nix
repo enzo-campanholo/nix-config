@@ -64,10 +64,7 @@
     };
   };
 
-  users.users.isolino = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" ];
-  };
+  users.users.isolino.isNormalUser = true;
 
   home-manager = {
     useGlobalPkgs = true;

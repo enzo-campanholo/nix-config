@@ -70,6 +70,8 @@
 
   programs.nh.flake = "/home/isolino/nix-config";
 
+  users.users.isolino.extraGroups = [ "wheel" ];
+
   system.autoUpgrade = {
     enable = true;
     flake = "github:enzo-campanholo/nix-config#MONSTRAO";
