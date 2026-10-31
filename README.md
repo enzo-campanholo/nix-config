@@ -21,7 +21,8 @@ A daily GitHub Action updates `flake.lock` once the checks and both builds pass.
 Both machines run Tailscale. After installing one, log it in once and follow the login URL; the login is kept in `/var/lib/tailscale`, not in the repo.
 
 ```sh
-sudo tailscale up
+sudo tailscale up                  # MONSTRAO
+ssh root@MONSTRINHO tailscale up   # MONSTRINHO
 tailscale ping MONSTRINHO
 ```
 
@@ -40,6 +41,8 @@ ssh -t root@MONSTRINHO 'cd /var/lib/cliproxyapi && runuser -u cliproxyapi -- cli
 
 Each user has a Nix-managed `t3.service` listening on loopback: isolino's on port 31000 and lavietos's on 31001. Reach it over the tailnet at `https://monstrinho.<tailnet>.ts.net:41000` (isolino) or `:41001` (lavietos), or through T3 Connect.
 
+As that user, `journalctl --user -u t3` shows the pairing token printed at startup, and `t3 pair` mints a new one.
+
 To enable T3 Connect, run these as the user whose environment you want to connect to:
 
 ```sh
@@ -51,6 +54,6 @@ Linking saves setup for the next server start. Use `systemctl --user status t3`,
 
 ## Recovery
 
-- Run `sudo nixos-rebuild switch --rollback`; if a machine doesn't boot, pick an older generation in its boot menu first. Then revert or fix the bad commit on GitHub: both machines reinstall `main` daily, and stopping `nixos-upgrade.timer` only lasts until the next reboot.
+- Run `sudo nixos-rebuild switch --rollback` on MONSTRAO or `ssh root@MONSTRINHO nixos-rebuild switch --rollback`; if a machine doesn't boot, pick an older generation in its boot menu first. Then revert or fix the bad commit on GitHub: both machines reinstall `main` daily, and stopping `nixos-upgrade.timer` only lasts until the next reboot.
 - MONSTRAO's Secure Boot keys live in `/var/lib/sbctl`. Back them up. If they are lost, nothing new will boot until Secure Boot is turned off or new keys are enrolled.
 - MONSTRAO's 1 GiB EFI partition is shared with Windows. Never delete `EFI/Microsoft`. The boot menu keeps 5 generations so the partition does not fill up.
