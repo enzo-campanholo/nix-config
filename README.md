@@ -38,7 +38,7 @@ ssh -t root@MONSTRINHO 'cd /var/lib/cliproxyapi && runuser -u cliproxyapi -- cli
 
 ## T3 Code on MONSTRINHO
 
-Each user has a Nix-managed `t3.service`: isolino uses port 31000 and lavietos uses 31001. Direct access is restricted by the firewall to Tailscale; loopback access also lets T3 Connect's managed tunnel reach the server.
+Each user has a Nix-managed `t3.service` listening on loopback: isolino's on port 31000 and lavietos's on 31001. Reach it over the tailnet at `https://monstrinho.<tailnet>.ts.net:41000` (isolino) or `:41001` (lavietos), or through T3 Connect.
 
 To enable T3 Connect, run these as the user whose environment you want to connect to:
 

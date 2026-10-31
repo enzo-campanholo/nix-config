@@ -182,9 +182,9 @@ in
       T3CODE_CLOUDFLARED_PATH = lib.getExe pkgs.cloudflared;
     };
     serviceConfig = {
-      # A port per user from their UID: 31000 for isolino, 31001 for lavietos.
-      # Every address, so T3 Connect's Cloudflare tunnel can reach it; the firewall keeps it off the LAN.
-      ExecStart = "${lib.getExe llmAgents.t3code.unwrapped} serve --host 0.0.0.0 --port 3%U";
+      # A port per user from their UID: 31000 for isolino, 31001 for lavietos. Tailscale Serve and T3 Connect's tunnel
+      # reach it on loopback.
+      ExecStart = "${lib.getExe llmAgents.t3code.unwrapped} serve --host 127.0.0.1 --port 3%U";
       # It prints a pairing token at startup, and wheel can read every user's journal. Pair with `t3 pair`.
       StandardOutput = "append:%t/t3.log";
       Restart = "on-failure";
